@@ -1,6 +1,5 @@
 consultingEmail: partnerships-sol@stgallen.oikos-international.org
 projectHeadEmail: ph-solar@stgallen.oikos-international.org
-contactFormUrl: null
 applicationUrl: https://www.oikos-stgallen.com/open-positions-oikos-solar
 linkedin: https://www.linkedin.com/company/oikos-solar/
 instagram: https://www.instagram.com/oikos_solar/
@@ -8,5 +7,4 @@ addressLines: |-
   oikos Solar, c/o oikos St. Gallen
   Dufourstrasse 50
   9000 St. Gallen
-officeNote: Containers behind the HSG library, bottom floor.
-analyticsToken: null
+officeNote: Containers behind the HSG library.
