@@ -1,0 +1,40 @@
+---
+import { formatDate, FORMAT_LABEL, type Event } from '../lib/content';
+
+interface Props {
+  event: Event;
+  past?: boolean;
+}
+const { event, past = false } = Astro.props;
+const d = formatDate(event.date!);
+const time = [event.startTime, event.endTime].filter(Boolean).join('–');
+---
+<article class:list={['ev', { past }]} data-date={event.date}>
+  <div class:list={['cover', event.format]}>
+    {event.cover && <img src={event.cover} alt="" loading="lazy" />}
+    <span class="tag">{FORMAT_LABEL[event.format] ?? event.format}</span>
+  </div>
+  <div class="body">
+    <div class="date-block" aria-label={d.long}><b>{d.day}</b><span>{d.mon}</span></div>
+    <div>
+      <h3>{event.title}</h3>
+      <div class="meta">
+        {time && <span>{time}</span>}
+        {event.location && <span>{event.location}</span>}
+        {event.language && <span class="pill grey">{event.language}</span>}
+        {event.partner && <span>with {event.partner}</span>}
+      </div>
+      {event.description && <p>{event.description}</p>}
+      {!past && event.signupUrl && (
+        <a class="btn btn-sun btn-sm ext signup" href={event.signupUrl} target="_blank" rel="noopener">Sign up</a>
+      )}
+      {past && event.recap && (
+        <div class="recap"><b>Recap</b>{event.recap}
+          {event.photos && event.photos.length > 0 && (
+            <div class="photos">{event.photos.map((p) => p && <img src={p} alt="" loading="lazy" />)}</div>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</article>

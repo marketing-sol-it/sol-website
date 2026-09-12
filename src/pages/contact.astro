@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSettings, mailto } from '../lib/content';
+
+const settings = await getSettings();
+const request = mailto(settings.consultingEmail, 'Consulting request via oikos-solar.com');
+const address = (settings.addressLines ?? '').split('\n').filter(Boolean);
+---
+<Base
+  title="Contact | oikos Solar"
+  description="Contact oikos Solar: consulting requests, event partnerships, sponsoring, press, and where to find us at the University of St. Gallen."
+  path="/contact"
+>
+  <section class="phero sun">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1>Say hello.</h1>
+      <p class="lede">For consulting requests, email {settings.consultingEmail.split('@')[0]}@ directly. For everything else, use the contact form or drop by on campus.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap contact-grid">
+      <dl>
+        <dt>Consulting</dt><dd><a href={request}>{settings.consultingEmail}</a></dd>
+        <dt>Project Head</dt><dd><a href={`mailto:${settings.projectHeadEmail}`}>{settings.projectHeadEmail}</a></dd>
+        {address.length > 0 && <><dt>Post</dt><dd>{address.map((l, i) => <>{i > 0 && <br />}{l}</>)}</dd></>}
+        {settings.officeNote && <><dt>On campus</dt><dd>{settings.officeNote}</dd></>}
+        <dt>Social</dt><dd>
+          {settings.linkedin && <a href={settings.linkedin} rel="noopener">LinkedIn</a>}
+          {settings.linkedin && settings.instagram && ' · '}
+          {settings.instagram && <a href={settings.instagram} rel="noopener">Instagram</a>}
+        </dd>
+      </dl>
+      <div class="mailbox">
+        <span class="eyebrow sun">General enquiries</span>
+        <h3>Contact form</h3>
+        <p>Event partnerships, speaking, sponsoring, press, or anything else. The form opens in a new tab and takes a minute.</p>
+        {settings.contactFormUrl ? (
+          <a class="btn btn-ink ext" href={settings.contactFormUrl} target="_blank" rel="noopener">Open the contact form</a>
+        ) : (
+          <a class="btn btn-ink" href={`mailto:${settings.projectHeadEmail}?subject=Enquiry%20via%20oikos-solar.com`}>Email us</a>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>

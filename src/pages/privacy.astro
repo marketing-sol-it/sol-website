@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSettings } from '../lib/content';
+const settings = await getSettings();
+---
+<Base title="Privacy | oikos Solar" description="Privacy notice for oikos-solar.com." path="/privacy">
+  <section class="phero sun">
+    <div class="wrap">
+      <p class="eyebrow">Legal</p>
+      <h1>Privacy notice.</h1>
+      <p class="lede">What this website collects, what it does not, and whom to ask.</p>
+    </div>
+  </section>
+  <section class="band">
+    <div class="wrap prose">
+      <h2>Controller</h2>
+      <p>oikos St. Gallen, Dufourstrasse 50, 9000 St. Gallen, Switzerland, for its project oikos Solar. Questions about data protection: <a href={`mailto:${settings.projectHeadEmail}`}>{settings.projectHeadEmail}</a>.</p>
+      <h2>What this website collects</h2>
+      <p>This website is a static site. It sets no cookies and runs no advertising or tracking scripts. It contains no forms of its own.</p>
+      {settings.analyticsToken ? (
+        <p>We use Cloudflare Web Analytics to count visits. It works without cookies and without identifying individual visitors. Cloudflare processes technical data such as the page visited, browser type and country. See Cloudflare's privacy policy for details.</p>
+      ) : (
+        <p>We use no analytics.</p>
+      )}
+      <p>Our hosting provider, Cloudflare, processes technical connection data such as IP address, browser type and the pages requested, in server logs, for security and operation of the service.</p>
+      <h2>Forms hosted by third parties</h2>
+      <p>Event sign-up, the contact form and the application form are hosted by third-party services and open in a new tab. When you fill in one of those forms, the data you enter is processed by that service and by oikos St. Gallen for the purpose you submitted it for: managing your event registration, answering your enquiry, or processing your application. The following services are used:</p>
+      <ul>
+        <li>Notion (Notion Labs, Inc.) for event sign-up and the contact form.</li>
+        <li>The oikos St. Gallen website and its application form for applications to join the team.</li>
+      </ul>
+      <p>Applications are kept for the duration of the recruiting process and deleted at the end of the semester unless you join the team. Event registrations are deleted after the event. Enquiries are kept as long as needed to answer them.</p>
+      <h2>Email</h2>
+      <p>If you email us, we store your message and address to answer you. We do not share them with third parties.</p>
+      <h2>Fonts</h2>
+      <p>Fonts are loaded from Google Fonts. Google processes the technical request data needed to deliver the font files.</p>
+      <h2>Your rights</h2>
+      <p>You can ask for information about the personal data we hold about you, and for its correction or deletion, by writing to the address above.</p>
+      <p>This notice follows the Swiss Federal Act on Data Protection (FADP). Last updated September 2026.</p>
+    </div>
+  </section>
+</Base>

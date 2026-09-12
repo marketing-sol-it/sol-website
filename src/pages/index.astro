@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import { getEvents, getPartners, getSettings, formatDate, FORMAT_LABEL, mailto } from '../lib/content';
+
+const settings = await getSettings();
+const { upcoming } = await getEvents();
+const next = upcoming[0];
+const partners = (await getPartners()).filter((p) => p.showOnHome);
+const workWithUs = mailto(settings.consultingEmail, 'Consulting request via oikos-solar.com');
+---
+<Base
+  title="oikos Solar | Student-led consulting for the energy transition"
+  description="oikos Solar is the energy project of oikos St. Gallen at the University of St. Gallen. Market and strategy consulting for businesses, startups and public institutions in the energy transition, plus events on campus."
+  path="/"
+  strip
+>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="eyebrow sun">Student-led consulting · University of St. Gallen</p>
+        <h1>Business consulting for the <em>energy transition,</em> by HSG students.</h1>
+        <p class="lede">oikos Solar is the energy project of oikos St. Gallen, the student association for sustainability at the University of St. Gallen. We support businesses, startups and public institutions with market studies, go-to-market strategies and business model work, and we bring the energy transition onto campus.</p>
+        <div class="ctas">
+          <a class="btn btn-sun" href="/consulting">Our consulting</a>
+          <a class="btn btn-ghost" href="/about">About us</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img class="hero-photo" src="/images/site/hero.jpg" alt="Students working together at HSG Square" width="1600" height="1069" fetchpriority="high" />
+        <img class="hero-sun" src="/logo.png" alt="" width="220" height="243" aria-hidden="true" />
+        {next ? (
+          <a class="next-event float" href="/events">
+            <div class="date-block"><b>{formatDate(next.date!).day}</b><span>{formatDate(next.date!).mon}</span></div>
+            <div>
+              <span class="eyebrow">Next event · {FORMAT_LABEL[next.format] ?? next.format}</span>
+              <h3>{next.title}</h3>
+              <div class="meta">
+                {next.startTime && <span>{[next.startTime, next.endTime].filter(Boolean).join('–')}</span>}
+                {next.location && <span>{next.location}</span>}
+              </div>
+            </div>
+          </a>
+        ) : (
+          <a class="next-event float" href="/events">
+            <div class="date-block muted"><b>?</b><span>soon</span></div>
+            <div><span class="eyebrow">Next event</span><h3>In preparation</h3><div class="meta"><span>Follow us for the announcement.</span></div></div>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="paths reveal">
+        <a class="path main photo" href="/consulting" style="background-image:url('/images/site/campus.jpg')">
+          <span class="eyebrow">Consulting</span>
+          <h3>Market and strategy work for organisations in the energy transition.</h3>
+          <p>Go-to-market, competitor analysis, segmentation, positioning, business model innovation. Scoped with you, delivered by a team of HSG students in 6 to 10 weeks.</p>
+          <span class="go">See services and reference projects →</span>
+        </a>
+        <a class="path" href="/events">
+          <span class="eyebrow">Events</span>
+          <h3>Panels and workshops at HSG</h3>
+          <p>Panel discussions with industry guests, hands-on case workshops and apéros. For students who want to understand the energy transition beyond the lecture hall.</p>
+          <span class="go">Upcoming →</span>
+        </a>
+        <a class="path" href="/about">
+          <span class="eyebrow">About</span>
+          <h3>Who we are and how to join</h3>
+          <p>The team, the story, and open roles each semester.</p>
+          <span class="go">More →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {partners.length > 0 && (
+    <section class="band">
+      <div class="wrap reveal">
+        <p class="eyebrow" style="text-align:center;margin-bottom:36px">Partners and clients</p>
+        <div class="logos">
+          {partners.map((p) =>
+            p.logo ? (
+              <a href={p.website ?? undefined} rel="noopener" target={p.website ? '_blank' : undefined} title={p.name}><img src={p.logo} alt={p.name} loading="lazy" /></a>
+            ) : (
+              <span>{p.name}</span>
+            ),
+          )}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="band sun cta-band">
+    <div class="wrap reveal">
+      <h2>Bring us a question about your market.</h2>
+      <div class="ctas">
+        <a class="btn btn-ink" href={workWithUs}>Email {settings.consultingEmail.split('@')[0]}@</a>
+        <a class="btn btn-ghost" href="/consulting#how">How we work</a>
+      </div>
+    </div>
+  </section>
+</Base>

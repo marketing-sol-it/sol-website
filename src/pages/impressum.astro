@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSettings } from '../lib/content';
+const settings = await getSettings();
+---
+<Base title="Impressum | oikos Solar" description="Legal notice for oikos-solar.com." path="/impressum">
+  <section class="phero sun">
+    <div class="wrap">
+      <p class="eyebrow">Legal</p>
+      <h1>Impressum.</h1>
+    </div>
+  </section>
+  <section class="band">
+    <div class="wrap prose">
+      <h2>Responsible for this website</h2>
+      <p>oikos Solar, a project of<br />oikos St. Gallen<br />Dufourstrasse 50<br />9000 St. Gallen<br />Switzerland</p>
+      <p>Email: <a href={`mailto:${settings.projectHeadEmail}`}>{settings.projectHeadEmail}</a></p>
+      <p>oikos St. Gallen is a non-profit association (Verein) under Swiss law, based at the University of St. Gallen. oikos Solar is a project of the association and is not a separate legal entity.</p>
+      <h2>Disclaimer</h2>
+      <p>The content of this website has been prepared with care. oikos St. Gallen does not guarantee the accuracy, completeness or timeliness of the information provided. Liability claims regarding damage caused by the use of any information provided are excluded to the extent permitted by law.</p>
+      <p>Consulting outputs described on this site are decision-oriented analyses and recommendations. Legal interpretation and formal compliance should be validated with qualified experts.</p>
+      <h2>External links</h2>
+      <p>This website links to external sites, including forms hosted by third parties. oikos St. Gallen has no influence on their content and accepts no responsibility for it. The respective provider is responsible for the content of linked pages.</p>
+      <h2>Copyright</h2>
+      <p>Texts, images and the oikos Solar logo are the property of oikos St. Gallen unless stated otherwise. Partner and client logos belong to their respective owners and are shown with permission.</p>
+    </div>
+  </section>
+</Base>

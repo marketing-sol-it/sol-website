@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { getSettings, getPartners, mailto } from '../lib/content';
+
+const settings = await getSettings();
+const email = settings.consultingEmail;
+const subject = 'Consulting request via oikos-solar.com';
+const body = 'Organisation:\nOur question:\nTimeframe:\n';
+const request = mailto(email, subject, body);
+const partners = await getPartners();
+const logoOf = (slug: string) => partners.find((p) => p.slug === slug)?.logo ?? null;
+
+const services = [
+  { icon: 'search', q: 'Where is the market?', title: 'Market intelligence', items: ['Market studies and sizing', 'Competitor analysis', 'Customer and stakeholder interviews', 'Regulatory and subsidy landscape'] },
+  { icon: 'target', q: 'Whom do we serve?', title: 'Positioning', items: ['Customer segmentation', 'Positioning and value proposition', 'Pricing and offer design'] },
+  { icon: 'rocket', q: 'How do we grow?', title: 'Go-to-market', items: ['Go-to-market strategy', 'Channel and partnership strategy', 'Customer journey and sales process'] },
+  { icon: 'calc', q: 'Does the model hold?', title: 'Business analysis', items: ['Business model innovation', 'Business case and scenario modelling', 'Feasibility and roadmap'] },
+];
+const steps = [
+  { icon: 'mail', when: 'Week 0', title: 'Email and intro call', text: 'You write two sentences about your question. We call back within three working days and say honestly whether a student team adds value.' },
+  { icon: 'doc', when: 'Week 1', title: 'Scoping', text: 'A one-page proposal: deliverables, timeline, team, and a fixed fee that covers our costs.' },
+  { icon: 'users', when: 'Weeks 2 to 9', title: 'Project', text: '3 to 5 consultants with weekly check-ins. Research, interviews, modelling, drafts.' },
+  { icon: 'flag', when: 'Week 10', title: 'Handover', text: 'Final presentation, written report, and the models or tools we built for you.' },
+];
+const refs = [
+  { slug: 'st-galler-stadtwerke', name: 'St.Galler Stadtwerke', kind: 'Public utility', challenge: 'Grow the solar contracting service line in a market where households and businesses compare offers from many installers.', work: 'Market study of the regional solar contracting market, customer journey mapping from first contact to signing, and business model options for the service line.', outcome: 'Decision-ready recommendations on positioning, contract structure and conversion friction points, plus a follow-on project evaluation tool.' },
+  { slug: 'inova-energy', name: 'Inova Energy', kind: 'Startup', challenge: 'Enter the Swiss market with a clear target segment and a credible route to first customers.', work: 'Competitor and market analysis, customer segmentation, and a go-to-market strategy with channel priorities.', outcome: 'A prioritised segment list, positioning against named competitors, and a phased go-to-market plan the founders now execute.' },
+];
+---
+<Base
+  title="Consulting | oikos Solar"
+  description="Student consulting for businesses, startups, institutions and public institutions in the energy transition: market studies, competitor analysis, segmentation, go-to-market and business model innovation."
+  path="/consulting"
+>
+  <section class="phero sun">
+    <div class="wrap">
+      <p class="eyebrow">Consulting</p>
+      <h1>Student consulting for businesses in the energy transition.</h1>
+      <p class="lede">HSG students working on your market and strategy questions. We combine structured problem solving, research and interviews to deliver recommendations you can act on.</p>
+      <div class="ctas">
+        <a class="btn btn-ink" href={request}>Email us your question</a>
+        <a class="btn btn-ghost" href="#references">Reference projects</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head"><h2>Who we work with.</h2></div>
+      <div class="four equal reveal">
+        <div class="card icon-card"><span class="ico"><Icon name="briefcase" /></span><span class="eyebrow sun">Businesses</span><h3>Energy companies</h3><p>Installers, contracting providers and energy service companies looking to grow or reposition.</p></div>
+        <div class="card icon-card"><span class="ico"><Icon name="rocket" /></span><span class="eyebrow sun">Startups</span><h3>Energy startups</h3><p>Market entry, segmentation and positioning before the next funding round.</p></div>
+        <div class="card icon-card"><span class="ico"><Icon name="layers" /></span><span class="eyebrow sun">Institutions</span><h3>Associations and research</h3><p>Market studies and stakeholder analyses that inform programmes and policy.</p></div>
+        <div class="card icon-card"><span class="ico"><Icon name="handshake" /></span><span class="eyebrow sun">Public sector</span><h3>Utilities and cities</h3><p>Business model innovation for public energy services, customer journey and acceptance.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band inv">
+    <div class="wrap">
+      <div class="sec-head"><h2>Services.</h2><p class="lede">Grouped by the question a client usually arrives with.</p></div>
+      <div class="svc-grid reveal">
+        {services.map((s) => (
+          <div class="svc-tile">
+            <span class="ico"><Icon name={s.icon} size={26} /></span>
+            <span class="eyebrow">{s.q}</span>
+            <h3>{s.title}</h3>
+            <ul>{s.items.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+      <p class="note" style="margin-top:28px;color:var(--fg-inv-2)">We provide decision-oriented analysis and recommendations. Legal interpretation and formal compliance should be validated with qualified experts.</p>
+    </div>
+  </section>
+
+  <section class="band alt" id="references">
+    <div class="wrap">
+      <div class="sec-head"><h2>Reference projects.</h2><p class="lede">Published with the client's permission.</p></div>
+      <div class="ref reveal">
+        {refs.map((r) => {
+          const logo = logoOf(r.slug);
+          return (
+            <div class="refcard">
+              <div class="top">
+                {logo ? <img src={logo} alt={r.name} loading="lazy" /> : <h3>{r.name}</h3>}
+                <span class="pill">{r.kind}</span>
+              </div>
+              <h3 class="refname">{r.name}</h3>
+              <dl>
+                <dt>Challenge</dt><dd>{r.challenge}</dd>
+                <dt>Work</dt><dd>{r.work}</dd>
+                <dt>Outcome</dt><dd>{r.outcome}</dd>
+              </dl>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="how">
+    <div class="wrap">
+      <div class="sec-head"><h2>How an engagement works.</h2><p class="lede">From the first email to the handover in about ten weeks.</p></div>
+      <ol class="flow-steps reveal">
+        {steps.map((s, i) => (
+          <li class="fstep">
+            <span class="dot"><Icon name={s.icon} size={20} /></span>
+            <small><span class="num">{String(i + 1).padStart(2, '0')}</span>{s.when}</small>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="band tint">
+    <div class="wrap two">
+      <div>
+        <div class="sec-head tight"><h2>Your questions, answered.</h2></div>
+        <details><summary>What does a project cost?</summary><p>We are a not-for-profit. Fees cover the time of our consultants and are agreed per project in the scoping phase, as a fixed amount you know before we start.</p></details>
+        <details><summary>In which languages do you consult?</summary><p>German, English, French and Italian. Reports are typically delivered in German or English.</p></details>
+        <details><summary>Who is on the project team?</summary><p>Three to five students from different HSG programmes, coordinated by our Head of Consulting, who is your single point of contact from scoping to handover.</p></details>
+        <details><summary>What makes oikos Solar different?</summary><p>We combine academic rigour with practical implementation. Our consultants work on real projects with measurable impact in Switzerland's energy transition.</p></details>
+      </div>
+      <div class="mailbox" id="request">
+        <span class="eyebrow sun">Start a conversation</span>
+        <h3>One email is enough.</h3>
+        <p>Tell us who you are and what question you are trying to answer. Two or three sentences. We reply within three working days with a proposal for an intro call.</p>
+        <a class="btn btn-sun" href={request}>Write to us</a>
+        <span class="addr">{email}</span>
+      </div>
+    </div>
+  </section>
+</Base>

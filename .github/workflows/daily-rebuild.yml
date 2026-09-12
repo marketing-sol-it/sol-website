@@ -1,0 +1,15 @@
+# Rebuilds the site once a day so date-driven content (upcoming vs past
+# events) stays correct even when nobody edits.
+# Requires a repository secret CF_DEPLOY_HOOK_URL: the Cloudflare Pages
+# deploy hook URL (Pages project → Settings → Builds → Deploy hooks).
+name: Daily rebuild
+on:
+  schedule:
+    - cron: '15 3 * * *'
+  workflow_dispatch:
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Cloudflare Pages deploy hook
+        run: curl -fsS -X POST "${{ secrets.CF_DEPLOY_HOOK_URL }}"

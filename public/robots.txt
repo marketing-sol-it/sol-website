@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oikos-solar.com/sitemap-index.xml

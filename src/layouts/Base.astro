@@ -1,0 +1,162 @@
+---
+import '../styles/global.css';
+import { getSettings, getPositions, mailto } from '../lib/content';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path used to mark the active nav item, e.g. "/consulting" */
+  path: string;
+  /** Show the yellow "applications open" strip under the header */
+  strip?: boolean;
+}
+const { title, description, path, strip = false } = Astro.props;
+const settings = await getSettings();
+const positions = await getPositions();
+const openRoles = positions.filter((p) => p.open).length;
+const workWithUs = mailto(settings.consultingEmail, 'Consulting request via oikos-solar.com');
+const nav = [
+  ['/consulting', 'Consulting'],
+  ['/events', 'Events'],
+  ['/about', 'About'],
+  ['/contact', 'Contact'],
+];
+const canonical = new URL(path === '/' ? '/' : path + '/', Astro.site ?? 'https://oikos-solar.com').toString();
+---
+<html lang="en">
+  <head>
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/logo.png', Astro.site ?? 'https://oikos-solar.com').toString()} />
+    <meta name="theme-color" content="#FFC700" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;1,400&display=swap" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'oikos Solar',
+      url: 'https://oikos-solar.com',
+      logo: 'https://oikos-solar.com/logo.png',
+      email: settings.consultingEmail,
+      parentOrganization: { '@type': 'Organization', name: 'oikos St. Gallen', url: 'https://www.oikos-stgallen.com' },
+      address: { '@type': 'PostalAddress', streetAddress: 'Dufourstrasse 50', postalCode: '9000', addressLocality: 'St. Gallen', addressCountry: 'CH' },
+      sameAs: [settings.linkedin, settings.instagram].filter(Boolean),
+    })} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site">
+      <div class="wrap">
+        <nav class="nav" id="nav" aria-label="Main">
+          <a class="brand" href="/"><img src="/logo.png" alt="" width="44" height="49" /><span>oikos Solar</span></a>
+          <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navlist">Menu</button>
+          <ul id="navlist">
+            {nav.map(([href, label]) => (
+              <li><a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a></li>
+            ))}
+          </ul>
+          <a class="btn btn-sun btn-sm" href={workWithUs}>Work with us</a>
+        </nav>
+      </div>
+    </header>
+
+    {strip && openRoles > 0 && (
+      <div class="strip">
+        <div class="wrap">
+          <span>We are looking for new team members. {openRoles} open {openRoles === 1 ? 'role' : 'roles'}, applications welcome anytime.</span>
+          <a href="/about#join">See open roles →</a>
+        </div>
+      </div>
+    )}
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <a class="brand" href="/"><img src="/logo.png" alt="" width="44" height="49" /><span>oikos Solar</span></a>
+            <p>Student-led consulting and events for the Swiss energy transition. A project of oikos St. Gallen at the University of St. Gallen.</p>
+          </div>
+          <div>
+            <h4>Site</h4>
+            <ul>
+              <li><a href="/consulting">Consulting</a></li>
+              <li><a href="/events">Events</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/about#join">Join the team</a></li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Network</h4>
+            <ul>
+              <li><a href="https://www.oikos-stgallen.com" rel="noopener">oikos St. Gallen</a></li>
+              <li><a href="https://oikos-international.org" rel="noopener">oikos International</a></li>
+              <li><a href="https://www.unisg.ch" rel="noopener">University of St. Gallen</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Follow</h4>
+            <ul>
+              {settings.linkedin && <li><a href={settings.linkedin} rel="noopener">LinkedIn</a></li>}
+              {settings.instagram && <li><a href={settings.instagram} rel="noopener">Instagram</a></li>}
+              <li><a href={`mailto:${settings.projectHeadEmail}`}>Email</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="fine">
+          <span>© {new Date().getFullYear()} oikos St. Gallen · Dufourstrasse 50, 9000 St. Gallen</span>
+          <span><a href="/impressum">Impressum</a> · <a href="/privacy">Privacy</a></span>
+        </div>
+      </div>
+    </footer>
+
+    {settings.analyticsToken && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token": "${settings.analyticsToken}"}`}></script>
+    )}
+
+    <script>
+      const nav = document.getElementById('nav')!;
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }, { rootMargin: '0px 0px -10% 0px' });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      const btn = document.getElementById('menuBtn')!;
+      btn.addEventListener('click', () => {
+        nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(nav.classList.contains('open')));
+      });
+
+      // The site is prerendered. This check keeps the events split honest
+      // between builds: move events whose date has passed into "Past".
+      const dayStart = new Date(); dayStart.setHours(0, 0, 0, 0);
+      const upcoming = document.getElementById('upcoming');
+      const past = document.getElementById('past');
+      if (upcoming && past) {
+        for (const card of Array.from(upcoming.querySelectorAll<HTMLElement>('[data-date]'))) {
+          if (new Date(card.dataset.date + 'T00:00:00') < dayStart) {
+            card.classList.add('past');
+            card.querySelector('.signup')?.remove();
+            past.prepend(card);
+          }
+        }
+        if (!upcoming.querySelector('[data-date]')) upcoming.querySelector('.empty')?.removeAttribute('hidden');
+        past.querySelector('.empty')?.setAttribute('hidden', '');
+        if (!past.querySelector('[data-date]')) past.querySelector('.empty')?.removeAttribute('hidden');
+      }
+    </script>
+  </body>
+</html>

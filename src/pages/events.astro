@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import EventCard from '../components/EventCard.astro';
+import { getEvents, getSettings } from '../lib/content';
+
+const { upcoming, past } = await getEvents();
+const settings = await getSettings();
+---
+<Base
+  title="Events | oikos Solar"
+  description="Panels with industry guests, case competitions, workshops and apéros on the energy transition at the University of St. Gallen, organised by students for students."
+  path="/events"
+>
+  <section class="phero sun">
+    <div class="wrap">
+      <p class="eyebrow">Events</p>
+      <h1>Where the energy transition meets campus.</h1>
+      <p class="lede">Panels with guests from the energy industry, case competitions with real clients, workshops and apéros. Organised by students, for students who want to understand the energy transition beyond the lecture hall. Most events are free. Sign up to secure a seat.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap" id="upcoming">
+      <div class="sec-head"><h2>Upcoming.</h2></div>
+      <div class="ev-grid">
+        {upcoming.map((e) => <EventCard event={e} />)}
+      </div>
+      <div class="empty" hidden={upcoming.length > 0}>
+        No event scheduled right now. Follow us on {settings.linkedin ? <a href={settings.linkedin} rel="noopener">LinkedIn</a> : 'LinkedIn'} or {settings.instagram ? <a href={settings.instagram} rel="noopener">Instagram</a> : 'Instagram'} to hear about the next one first.
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap" id="past">
+      <div class="sec-head"><h2>Past events.</h2><p class="lede">A short recap stays online, so partners and applicants can see what we actually do.</p></div>
+      <div class="ev-grid">
+        {past.map((e) => <EventCard event={e} past />)}
+      </div>
+      <div class="empty" hidden={past.length > 0}>Nothing here yet.</div>
+    </div>
+  </section>
+
+  <section class="band inv cta-band">
+    <div class="wrap">
+      <h2>Want to host an event with us?</h2>
+      <div class="ctas">
+        <a class="btn btn-sun" href={`mailto:${settings.projectHeadEmail}?subject=Event%20partnership`}>Email the Project Head</a>
+        <a class="btn btn-ghost" href="/contact" style="border-color:var(--fg-inv);color:var(--fg-inv)">Contact</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,165 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { getAbout, getTeam, getPositions, getSettings, initials, paragraphs } from '../lib/content';
+
+const about = await getAbout();
+const settings = await getSettings();
+const { leadership, advisory } = await getTeam();
+const positions = await getPositions();
+const openRoles = positions.filter((p) => p.open).length;
+const story = paragraphs(about.story);
+const spontaneous = `mailto:${settings.projectHeadEmail}?subject=${encodeURIComponent('Spontaneous application')}`;
+const perks = [
+  { icon: 'briefcase', title: 'Real client projects', text: 'Utilities, companies and startups in the energy transition. Work that ends up in someone\'s strategy.' },
+  { icon: 'clock', title: '4 to 10 hours a week', text: 'Depending on role and project, flexible around exam periods.' },
+  { icon: 'award', title: 'Campus Credits', text: 'Every role can qualify for ECTS via HSG Campus Credits.' },
+  { icon: 'doc', title: 'Work certificate', text: 'A work certificate for every member, a reference letter on request.' },
+  { icon: 'mic', title: 'Trainings', text: 'Consulting toolkit, pitching and public speaking, run by the team and partners.' },
+  { icon: 'network', title: 'Network', text: 'Founders, utilities and researchers in Swiss energy, and the oikos community across Switzerland.' },
+];
+---
+<Base
+  title="About | oikos Solar"
+  description="oikos Solar is the energy project of oikos St. Gallen at the University of St. Gallen: the story, the leadership team, the advisory board, and open roles for HSG students."
+  path="/about"
+>
+  <section class="phero sun">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h1>{about.intro}</h1>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      {about.groupPhoto && (
+        <figure class="group reveal">
+          <img src={about.groupPhoto} alt="The oikos Solar team" />
+          {about.groupPhotoCaption && <figcaption>{about.groupPhotoCaption}</figcaption>}
+        </figure>
+      )}
+      <div class="two">
+        <div class="story">
+          {story.map((p) => <p set:html={p.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')} />)}
+          {about.vision && <p><strong>{about.vision}</strong></p>}
+        </div>
+        <div class="stack">
+          <div class="card">
+            <span class="eyebrow sun">Part of oikos St. Gallen</span>
+            <p>oikos St. Gallen is a student-driven non-profit at the University of St. Gallen with over 120 active members across a dozen projects. oikos Solar reports to its board.</p>
+            <a class="ext" href="https://www.oikos-stgallen.com" rel="noopener" style="font-size:14px;font-weight:600">oikos-stgallen.com</a>
+          </div>
+          {advisory.length > 0 && (
+            <div class="card">
+              <span class="eyebrow sun">Advisory board</span>
+              {advisory.map((m) => (
+                <p><strong>{m.name}</strong>{m.role && <>, {m.role}</>}{m.linkedin && <> · <a href={m.linkedin} rel="noopener">LinkedIn</a></>}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {leadership.length > 0 && (
+    <section class="band alt">
+      <div class="wrap">
+        <div class="sec-head"><h2>Leadership team.</h2></div>
+        <div class="team reveal">
+          {leadership.map((m) => (
+            <div class="member">
+              <div class="ph">{m.photo ? <img src={m.photo} alt={m.name} loading="lazy" /> : initials(m.name)}</div>
+              <b>{m.name}</b>
+              <span>{m.role}</span>
+              {m.linkedin && <a class="ext" href={m.linkedin} rel="noopener">LinkedIn</a>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="band" id="join">
+    <div class="wrap">
+      <div class="sec-head"><h2>Join the team.</h2><p class="lede">We open roles whenever the team grows or a member hands over, across consulting, partnerships, marketing and events, and finance. No application rounds, no deadlines. No prior technical knowledge needed. Motivation is.</p></div>
+      {openRoles > 0 ? (
+        <div class="banner">
+          <div class="count">{openRoles}<small>{openRoles === 1 ? 'open role' : 'open roles'}</small></div>
+          <div><b>Applications are open.</b>We review applications as they come in and get back to you within two weeks.</div>
+          {settings.applicationUrl && <a class="btn btn-ink ext" href={settings.applicationUrl} target="_blank" rel="noopener">Apply now</a>}
+        </div>
+      ) : (
+        <div class="banner closed">
+          <div><b>No open roles at the moment.</b>Spontaneous applications are always welcome. Tell us what you would like to do.</div>
+          <a class="btn btn-ink" href={spontaneous}>Email us</a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {positions.length > 0 && (
+    <section class="band" style="padding-top:0">
+      <div class="wrap">
+        <div class="roles">
+          {positions.map((r, i) => (
+            <div class="role">
+              <span class="n">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{r.title}</h3>
+                {r.description && <p>{r.description}</p>}
+                <div class="links">
+                  {r.onePager && <a class="ext" href={r.onePager} target="_blank" rel="noopener">One-pager (PDF)</a>}
+                  {r.open && settings.applicationUrl && <a class="ext" href={settings.applicationUrl} target="_blank" rel="noopener">Apply</a>}
+                </div>
+              </div>
+              <div class="side">
+                <span class:list={['pill', { grey: !r.open }]}>{r.open ? 'Open' : 'Filled'}</span>
+                {r.team && <span>{r.team}</span>}
+                {(r.hours || r.credits) && <span>{[r.hours, r.credits].filter(Boolean).join(' · ')}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="band inv">
+    <div class="wrap">
+      <div class="sec-head"><h2>What you get.</h2><p class="lede">Beyond the line on the CV.</p></div>
+      <div class="perks reveal">
+        {perks.map((p) => (
+          <div class="perk">
+            <span class="ico"><Icon name={p.icon} size={26} /></span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap">
+      <div class="two">
+        <div>
+          <div class="sec-head tight"><h2>Questions.</h2></div>
+          <details><summary>Who can join?</summary><p>All motivated students enrolled at the University of St. Gallen. Assessment-year students are welcome as team members but cannot claim Campus Credits.</p></details>
+          <details><summary>How much time is it?</summary><p>Typically 4 to 10 hours per week depending on role and project, with flexibility around exam periods.</p></details>
+          <details><summary>Is it paid?</summary><p>All positions are voluntary. Every role can qualify for Campus Credits, and every member gets a work certificate.</p></details>
+          <details><summary>When can I apply?</summary><p>Anytime. We do not run application rounds. If a role is listed as open, apply through the link above with a short form and your CV. We invite you to a 30-minute conversation with the team lead and the Project Head, and you hear back within two weeks.</p></details>
+          <details><summary>The role I want is not listed. Can I still apply?</summary><p>Yes. Write to {settings.projectHeadEmail} with a few lines about what you would like to do, and we will get in touch when a matching role opens.</p></details>
+        </div>
+        <div class="mailbox">
+          <span class="eyebrow sun">Not sure which role fits?</span>
+          <h3>Ask us.</h3>
+          <p>Write a few lines about what you study and what you would like to do, and we suggest a role.</p>
+          <a class="btn btn-sun" href={`mailto:${settings.projectHeadEmail}?subject=${encodeURIComponent('Which role fits me?')}`}>Email the Project Head</a>
+          <span class="addr">{settings.projectHeadEmail}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
