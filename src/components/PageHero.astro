@@ -1,0 +1,29 @@
+---
+// Shared hero for Home, Consulting, Events and About: text on the left,
+// an HSG photo on the right with the watercolour sun overlapping its corner.
+// Slots: title (h1 content), lede, ctas, card (floating card over the photo).
+interface Props {
+  eyebrow: string;
+  image: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
+}
+const { eyebrow, image, alt, width = 1600, height = 1069, priority = true } = Astro.props;
+---
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <p class="eyebrow sun">{eyebrow}</p>
+      <h1><slot name="title" /></h1>
+      {Astro.slots.has('lede') && <p class="lede"><slot name="lede" /></p>}
+      {Astro.slots.has('ctas') && <div class="ctas"><slot name="ctas" /></div>}
+    </div>
+    <div class:list={['hero-visual', { 'has-card': Astro.slots.has('card') }]}>
+      <img class="hero-photo" src={image} alt={alt} width={width} height={height} fetchpriority={priority ? 'high' : undefined} loading={priority ? undefined : 'lazy'} />
+      <img class="hero-sun" src="/logo.png" alt="" width="220" height="243" aria-hidden="true" />
+      <slot name="card" />
+    </div>
+  </div>
+</section>

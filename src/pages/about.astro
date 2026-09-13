@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
 import { getAbout, getTeam, getPositions, getSettings, initials, paragraphs } from '../lib/content';
 
 const about = await getAbout();
@@ -24,21 +25,17 @@ const perks = [
   description="oikos Solar is the energy project of oikos St. Gallen at the University of St. Gallen: the story, the leadership team, the advisory board, and open roles for HSG students."
   path="/about"
 >
-  <section class="phero sun">
-    <div class="wrap">
-      <p class="eyebrow">About</p>
-      <h1>{about.intro}</h1>
-    </div>
-  </section>
+  <PageHero eyebrow="About" image={about.groupPhoto ?? '/images/site/stairs.jpg'} alt={about.groupPhotoCaption ?? 'The oikos Solar team'} width={1600} height={1184}>
+    <Fragment slot="title">{about.intro}</Fragment>
+    <Fragment slot="lede">The energy project of oikos St. Gallen at the University of St. Gallen. Founded 2023, consulting since 2025, run by students.</Fragment>
+    <Fragment slot="ctas">
+      <a class="btn btn-sun" href="#join">Open roles</a>
+      <a class="btn btn-ghost" href="#team">The team</a>
+    </Fragment>
+  </PageHero>
 
   <section class="band">
     <div class="wrap">
-      {about.groupPhoto && (
-        <figure class="group reveal">
-          <img src={about.groupPhoto} alt="The oikos Solar team" />
-          {about.groupPhotoCaption && <figcaption>{about.groupPhotoCaption}</figcaption>}
-        </figure>
-      )}
       <div class="two">
         <div class="story">
           {story.map((p) => <p set:html={p.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')} />)}
@@ -64,7 +61,7 @@ const perks = [
   </section>
 
   {leadership.length > 0 && (
-    <section class="band alt">
+    <section class="band alt" id="team">
       <div class="wrap">
         <div class="sec-head"><h2>Leadership team.</h2></div>
         <div class="team reveal">
