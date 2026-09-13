@@ -9,10 +9,12 @@ interface Props {
   width?: number;
   height?: number;
   priority?: boolean;
+  /** Shorter hero without the sun overlay, for subpages */
+  compact?: boolean;
 }
-const { eyebrow, image, alt, width = 1600, height = 1069, priority = true } = Astro.props;
+const { eyebrow, image, alt, width = 1600, height = 1069, priority = true, compact = false } = Astro.props;
 ---
-<section class="hero">
+<section class:list={["hero", { compact }]}>
   <div class="wrap">
     <div class="hero-text">
       <p class="eyebrow sun">{eyebrow}</p>
@@ -22,7 +24,7 @@ const { eyebrow, image, alt, width = 1600, height = 1069, priority = true } = As
     </div>
     <div class:list={['hero-visual', { 'has-card': Astro.slots.has('card') }]}>
       <img class="hero-photo" src={image} alt={alt} width={width} height={height} fetchpriority={priority ? 'high' : undefined} loading={priority ? undefined : 'lazy'} />
-      <img class="hero-sun" src="/logo.png" alt="" width="220" height="243" aria-hidden="true" />
+      {!compact && <img class="hero-sun" src="/logo.png" alt="" width="220" height="243" aria-hidden="true" />}
       <slot name="card" />
     </div>
   </div>

@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import PageHero from '../components/PageHero.astro';
 import { getAbout, getTeam, getPositions, getSettings, initials, paragraphs } from '../lib/content';
 
 const about = await getAbout();
@@ -25,37 +24,45 @@ const perks = [
   description="oikos Solar is the energy project of oikos St. Gallen at the University of St. Gallen: the story, the leadership team, the advisory board, and open roles for HSG students."
   path="/about"
 >
-  <PageHero eyebrow="About" image={about.groupPhoto ?? '/images/site/stairs.jpg'} alt={about.groupPhotoCaption ?? 'The oikos Solar team'} width={1600} height={1184}>
-    <Fragment slot="title">{about.intro}</Fragment>
-    <Fragment slot="lede">The energy project of oikos St. Gallen at the University of St. Gallen. Founded 2023, consulting since 2025, run by students.</Fragment>
-    <Fragment slot="ctas">
-      <a class="btn btn-sun" href="#join">Open roles</a>
-      <a class="btn btn-ghost" href="#team">The team</a>
-    </Fragment>
-  </PageHero>
-
-  <section class="band">
+  <section class="phero">
     <div class="wrap">
-      <div class="two">
+      <p class="eyebrow sun">About</p>
+      <h1>{about.intro}</h1>
+      <p class="lede">The energy project of oikos St. Gallen at the University of St. Gallen. Founded 2023, consulting since 2025, run by students.</p>
+      <div class="ctas">
+        <a class="btn btn-sun" href="#join">Open roles</a>
+        <a class="btn btn-ghost" href="#team">The team</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap">
+      <div class="about-intro reveal">
+        <figure>
+          <img src={about.groupPhoto ?? '/images/site/stairs.jpg'} alt={about.groupPhotoCaption ?? 'The oikos Solar team'} width="1600" height="1200" />
+          {about.groupPhotoCaption && <figcaption>{about.groupPhotoCaption}</figcaption>}
+        </figure>
         <div class="story">
+          <p class="eyebrow sun">Our story</p>
           {story.map((p) => <p set:html={p.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')} />)}
           {about.vision && <p><strong>{about.vision}</strong></p>}
         </div>
-        <div class="stack">
-          <div class="card">
-            <span class="eyebrow sun">Part of oikos St. Gallen</span>
-            <p>oikos St. Gallen is a student-driven non-profit at the University of St. Gallen with over 120 active members across a dozen projects. oikos Solar reports to its board.</p>
-            <a class="ext" href="https://www.oikos-stgallen.com" rel="noopener" style="font-size:14px;font-weight:600">oikos-stgallen.com</a>
-          </div>
-          {advisory.length > 0 && (
-            <div class="card">
-              <span class="eyebrow sun">Advisory board</span>
-              {advisory.map((m) => (
-                <p><strong>{m.name}</strong>{m.role && <>, {m.role}</>}{m.linkedin && <> · <a href={m.linkedin} rel="noopener">LinkedIn</a></>}</p>
-              ))}
-            </div>
-          )}
+      </div>
+      <div class="two about-cards">
+        <div class="card">
+          <span class="eyebrow sun">Part of oikos St. Gallen</span>
+          <p>oikos St. Gallen is a student-driven non-profit at the University of St. Gallen with over 120 active members across a dozen projects. oikos Solar reports to its board.</p>
+          <a class="ext" href="https://www.oikos-stgallen.com" rel="noopener" style="font-size:14px;font-weight:600">oikos-stgallen.com</a>
         </div>
+        {advisory.length > 0 && (
+          <div class="card">
+            <span class="eyebrow sun">Advisory board</span>
+            {advisory.map((m) => (
+              <p><strong>{m.name}</strong>{m.role && <>, {m.role}</>}{m.linkedin && <> · <a href={m.linkedin} rel="noopener">LinkedIn</a></>}</p>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   </section>
