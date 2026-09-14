@@ -339,7 +339,11 @@ section.band.inv h2, section.band.inv h3 { color: var(--fg-inv); }
 .hero.compact h1 { font-size: clamp(32px, 4.2vw, 54px); }
 .hero.compact .hero-visual { padding: 0; }
 .hero.compact .hero-photo { aspect-ratio: 3 / 2; border-radius: 10px; box-shadow: 0 20px 40px -28px rgba(26, 26, 26, .4); }
-@media (max-width: 900px) { .hero.compact .hero-visual { padding: 0; } .hero.compact .hero-photo { aspect-ratio: 16 / 9; } }
+@media (max-width: 900px) {
+  .hero.compact .wrap { grid-template-columns: 1fr; }
+  .hero.compact .hero-visual { padding: 0; }
+  .hero.compact .hero-photo { aspect-ratio: 16 / 9; }
+}
 
 /* About: photo and story as one section */
 .phero .ctas { margin-top: 24px; }
