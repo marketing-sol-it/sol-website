@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
 import { getSettings, getPartners, mailto } from '../lib/content';
 
 const settings = await getSettings();
@@ -33,17 +34,14 @@ const refs = [
   description="Student consulting for businesses, startups, institutions and public institutions in the energy transition: market studies, competitor analysis, segmentation, go-to-market and business model innovation."
   path="/consulting"
 >
-  <section class="phero sun">
-    <div class="wrap">
-      <p class="eyebrow">Consulting</p>
-      <h1>Student consulting for businesses in the energy transition.</h1>
-      <p class="lede">HSG students working on your market and strategy questions. We combine structured problem solving, research and interviews to deliver recommendations you can act on.</p>
-      <div class="ctas">
-        <a class="btn btn-ink" href={request}>Email us your question</a>
-        <a class="btn btn-ghost" href="#references">Reference projects</a>
-      </div>
-    </div>
-  </section>
+  <PageHero compact eyebrow="Consulting" image="/images/site/campus.jpg" alt="HSG Square, University of St. Gallen" height={1200}>
+    <Fragment slot="title">Student consulting for businesses in the <em>energy transition.</em></Fragment>
+    <Fragment slot="lede">HSG students working on your market and strategy questions. We combine structured problem solving, research and interviews to deliver recommendations you can act on.</Fragment>
+    <Fragment slot="ctas">
+      <a class="btn btn-sun" href={request}>Email us your question</a>
+      <a class="btn btn-ghost" href="#references">Reference projects</a>
+    </Fragment>
+  </PageHero>
 
   <section class="band">
     <div class="wrap">

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
 import { getEvents, getPartners, getSettings, formatDate, FORMAT_LABEL, mailto } from '../lib/content';
 
 const settings = await getSettings();
@@ -14,41 +15,34 @@ const workWithUs = mailto(settings.consultingEmail, 'Consulting request via oiko
   path="/"
   strip
 >
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-text">
-        <p class="eyebrow sun">Student-led consulting · University of St. Gallen</p>
-        <h1>Business consulting for the <em>energy transition,</em> by HSG students.</h1>
-        <p class="lede">oikos Solar is the energy project of oikos St. Gallen, the student association for sustainability at the University of St. Gallen. We support businesses, startups and public institutions with market studies, go-to-market strategies and business model work, and we bring the energy transition onto campus.</p>
-        <div class="ctas">
-          <a class="btn btn-sun" href="/consulting">Our consulting</a>
-          <a class="btn btn-ghost" href="/about">About us</a>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <img class="hero-photo" src="/images/site/hero.jpg" alt="Students working together at HSG Square" width="1600" height="1069" fetchpriority="high" />
-        <img class="hero-sun" src="/logo.png" alt="" width="220" height="243" aria-hidden="true" />
-        {next ? (
-          <a class="next-event float" href="/events">
-            <div class="date-block"><b>{formatDate(next.date!).day}</b><span>{formatDate(next.date!).mon}</span></div>
-            <div>
-              <span class="eyebrow">Next event · {FORMAT_LABEL[next.format] ?? next.format}</span>
-              <h3>{next.title}</h3>
-              <div class="meta">
-                {next.startTime && <span>{[next.startTime, next.endTime].filter(Boolean).join('–')}</span>}
-                {next.location && <span>{next.location}</span>}
-              </div>
+  <PageHero eyebrow="Student-led consulting · University of St. Gallen" image="/images/site/hero.jpg" alt="Students working together at HSG Square">
+    <Fragment slot="title">Business consulting for the <em>energy transition,</em> by HSG students.</Fragment>
+    <Fragment slot="lede">oikos Solar is the energy project of oikos St. Gallen, the student association for sustainability at the University of St. Gallen. We support businesses, startups and public institutions with market studies, go-to-market strategies and business model work, and we bring the energy transition onto campus.</Fragment>
+    <Fragment slot="ctas">
+      <a class="btn btn-sun" href="/consulting">Our consulting</a>
+      <a class="btn btn-ghost" href="/about">About us</a>
+    </Fragment>
+    <Fragment slot="card">
+      {next ? (
+        <a class="next-event float" href="/events">
+          <div class="date-block"><b>{formatDate(next.date!).day}</b><span>{formatDate(next.date!).mon}</span></div>
+          <div>
+            <span class="eyebrow">Next event · {FORMAT_LABEL[next.format] ?? next.format}</span>
+            <h3>{next.title}</h3>
+            <div class="meta">
+              {next.startTime && <span>{[next.startTime, next.endTime].filter(Boolean).join('–')}</span>}
+              {next.location && <span>{next.location}</span>}
             </div>
-          </a>
-        ) : (
-          <a class="next-event float" href="/events">
-            <div class="date-block muted"><b>?</b><span>soon</span></div>
-            <div><span class="eyebrow">Next event</span><h3>In preparation</h3><div class="meta"><span>Follow us for the announcement.</span></div></div>
-          </a>
-        )}
-      </div>
-    </div>
-  </section>
+          </div>
+        </a>
+      ) : (
+        <a class="next-event float" href="/events">
+          <div class="date-block muted"><b>?</b><span>soon</span></div>
+          <div><span class="eyebrow">Next event</span><h3>In preparation</h3><div class="meta"><span>Follow us for the announcement.</span></div></div>
+        </a>
+      )}
+    </Fragment>
+  </PageHero>
 
   <section class="band">
     <div class="wrap">

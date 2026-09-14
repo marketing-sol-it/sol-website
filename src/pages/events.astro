@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
 import EventCard from '../components/EventCard.astro';
 import { getEvents, getSettings } from '../lib/content';
 
@@ -11,13 +12,14 @@ const settings = await getSettings();
   description="Panels with industry guests, case competitions, workshops and apéros on the energy transition at the University of St. Gallen, organised by students for students."
   path="/events"
 >
-  <section class="phero sun">
-    <div class="wrap">
-      <p class="eyebrow">Events</p>
-      <h1>Where the energy transition meets campus.</h1>
-      <p class="lede">Panels with guests from the energy industry, case competitions with real clients, workshops and apéros. Organised by students, for students who want to understand the energy transition beyond the lecture hall. Most events are free. Sign up to secure a seat.</p>
-    </div>
-  </section>
+  <PageHero compact eyebrow="Events" image="/images/site/stairs.jpg" alt="Students on the central staircase of HSG Square" height={1184}>
+    <Fragment slot="title">Where the energy transition <em>meets campus.</em></Fragment>
+    <Fragment slot="lede">Panels with guests from the energy industry, case competitions with real clients, workshops and apéros. Organised by students, for students who want to understand the energy transition beyond the lecture hall. Most events are free. Sign up to secure a seat.</Fragment>
+    <Fragment slot="ctas">
+      <a class="btn btn-sun" href="#upcoming">Upcoming events</a>
+      <a class="btn btn-ghost" href="#past">Past events</a>
+    </Fragment>
+  </PageHero>
 
   <section class="band">
     <div class="wrap" id="upcoming">
