@@ -147,6 +147,7 @@ export default config({
         projectHeadEmail: fields.text({ label: 'Project Head email', validation: { isRequired: true } }),
         contactFormUrl: fields.url({ label: 'Contact form URL (Notion)' }),
         applicationUrl: fields.url({ label: 'Application page URL', description: 'The oikos St. Gallen application page or the Notion form.' }),
+        applicationDeadline: fields.date({ label: 'Application deadline', description: 'Optional. While this date lies in the future, the homepage strip and the About banner show it. Afterwards the site says "applications welcome anytime" again. Clear it when there is no deadline.' }),
         linkedin: fields.url({ label: 'LinkedIn URL' }),
         instagram: fields.url({ label: 'Instagram URL' }),
         addressLines: fields.text({ label: 'Postal address', multiline: true }),

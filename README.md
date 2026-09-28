@@ -36,7 +36,7 @@ Everything editable lives in the admin. Nothing else needs touching for day-to-d
 | **About page** | Headline, story (blank line between paragraphs, `**bold**` allowed), vision, group photo. |
 | **Site settings** | Emails, contact form URL, application page URL, social links, address, analytics token. |
 
-There are no application rounds or deadlines. Applications are open whenever a role is marked *Open*; with no open role, the About page invites spontaneous applications.
+Applications are open whenever a role is marked *Open*; with no open role, the About page invites spontaneous applications. An optional **application deadline** in *Site settings* adds "apply by …" to the homepage strip and a countdown to the About banner while the date lies in the future; afterwards the site returns to "applications welcome anytime" on its own. Clear the field when there is no deadline.
 
 ### Rules of thumb
 
@@ -56,7 +56,7 @@ The admin commits to GitHub, so the repository must be on GitHub and the site mu
    - `KEYSTATIC_SECRET`
    - `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`
 4. Editors sign in to `/keystatic` with GitHub and need write access to the repository. Every save is a commit; Cloudflare rebuilds the site in about a minute.
-5. Optional: create a deploy hook in Cloudflare Pages and store its URL as the repository secret `CF_DEPLOY_HOOK_URL`. The workflow in `.github/workflows/daily-rebuild.yml` then rebuilds the site every night so date-driven content stays correct even when nobody edits. Without it, the site still corrects the events split in the browser, but search engines see the state of the last build.
+5. Date-driven content (upcoming vs past events, the application deadline) is computed at build time and corrected in the browser between builds. Any save in the admin triggers a rebuild, so the built state rarely lags by more than a few days.
 
 The admin is protected by the GitHub login: only accounts with write access to the repository can edit. Review collaborators at every handover.
 

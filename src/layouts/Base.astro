@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { getSettings, getPositions, mailto } from '../lib/content';
+import { getSettings, getPositions, mailto, deadlineInfo } from '../lib/content';
 
 interface Props {
   title: string;
@@ -14,6 +14,7 @@ const { title, description, path, strip = false } = Astro.props;
 const settings = await getSettings();
 const positions = await getPositions();
 const openRoles = positions.filter((p) => p.open).length;
+const deadline = deadlineInfo(settings.applicationDeadline);
 const workWithUs = mailto(settings.consultingEmail, 'Consulting request via oikos-solar.com');
 const nav = [
   ['/consulting', 'Consulting'],
@@ -73,7 +74,14 @@ const canonical = new URL(path === '/' ? '/' : path + '/', Astro.site ?? 'https:
     {strip && openRoles > 0 && (
       <div class="strip">
         <div class="wrap">
-          <span>We are looking for new team members. {openRoles} open {openRoles === 1 ? 'role' : 'roles'}, applications welcome anytime.</span>
+          {deadline.active ? (
+            <>
+              <span class="dl-only" data-deadline={deadline.iso}>We are looking for new team members. {openRoles} open {openRoles === 1 ? 'role' : 'roles'}, apply by {deadline.long}.</span>
+              <span class="dl-fallback" hidden>We are looking for new team members. {openRoles} open {openRoles === 1 ? 'role' : 'roles'}, applications welcome anytime.</span>
+            </>
+          ) : (
+            <span>We are looking for new team members. {openRoles} open {openRoles === 1 ? 'role' : 'roles'}, applications welcome anytime.</span>
+          )}
           <a href="/about#join">See open roles →</a>
         </div>
       </div>
@@ -140,9 +148,17 @@ const canonical = new URL(path === '/' ? '/' : path + '/', Astro.site ?? 'https:
         btn.setAttribute('aria-expanded', String(nav.classList.contains('open')));
       });
 
-      // The site is prerendered. This check keeps the events split honest
-      // between builds: move events whose date has passed into "Past".
+      // The site is prerendered. These checks keep date-driven content honest
+      // between builds: drop the deadline wording once the date has passed,
+      // and move events whose date has passed into "Past".
       const dayStart = new Date(); dayStart.setHours(0, 0, 0, 0);
+      for (const el of Array.from(document.querySelectorAll<HTMLElement>('[data-deadline]'))) {
+        if (new Date(el.dataset.deadline + 'T23:59:59') < new Date()) {
+          el.hidden = true;
+          const fb = el.parentElement?.querySelector<HTMLElement>('.dl-fallback');
+          if (fb) fb.hidden = false;
+        }
+      }
       const upcoming = document.getElementById('upcoming');
       const past = document.getElementById('past');
       if (upcoming && past) {

@@ -1,13 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { getAbout, getTeam, getPositions, getSettings, initials, paragraphs } from '../lib/content';
+import { getAbout, getTeam, getPositions, getSettings, initials, paragraphs, deadlineInfo } from '../lib/content';
 
 const about = await getAbout();
 const settings = await getSettings();
 const { leadership, advisory } = await getTeam();
 const positions = await getPositions();
 const openRoles = positions.filter((p) => p.open).length;
+const deadline = deadlineInfo(settings.applicationDeadline);
 const story = paragraphs(about.story);
 const spontaneous = `mailto:${settings.projectHeadEmail}?subject=${encodeURIComponent('Spontaneous application')}`;
 const perks = [
@@ -87,8 +88,21 @@ const perks = [
 
   <section class="band" id="join">
     <div class="wrap">
-      <div class="sec-head"><h2>Join the team.</h2><p class="lede">We open roles whenever the team grows or a member hands over, across consulting, partnerships, marketing and events, and finance. No application rounds, no deadlines. No prior technical knowledge needed. Motivation is.</p></div>
-      {openRoles > 0 ? (
+      <div class="sec-head"><h2>Join the team.</h2><p class="lede">We open roles whenever the team grows or a member hands over, across consulting, partnerships, marketing and events, and finance. No prior technical knowledge needed. Motivation is.</p></div>
+      {openRoles > 0 && deadline.active ? (
+        <>
+          <div class="banner dl-only" data-deadline={deadline.iso}>
+            <div class="count">{deadline.daysLeft}<small>{deadline.daysLeft === 1 ? 'day left' : 'days left'}</small></div>
+            <div><b>Applications are open until {deadline.long}.</b>{openRoles} open {openRoles === 1 ? 'role' : 'roles'}. We review applications as they come in and get back to you within two weeks.</div>
+            {settings.applicationUrl && <a class="btn btn-ink ext" href={settings.applicationUrl} target="_blank" rel="noopener">Apply now</a>}
+          </div>
+          <div class="banner dl-fallback" hidden>
+            <div class="count">{openRoles}<small>{openRoles === 1 ? 'open role' : 'open roles'}</small></div>
+            <div><b>Applications are open.</b>We review applications as they come in and get back to you within two weeks.</div>
+            {settings.applicationUrl && <a class="btn btn-ink ext" href={settings.applicationUrl} target="_blank" rel="noopener">Apply now</a>}
+          </div>
+        </>
+      ) : openRoles > 0 ? (
         <div class="banner">
           <div class="count">{openRoles}<small>{openRoles === 1 ? 'open role' : 'open roles'}</small></div>
           <div><b>Applications are open.</b>We review applications as they come in and get back to you within two weeks.</div>
@@ -153,7 +167,7 @@ const perks = [
           <details><summary>Who can join?</summary><p>All motivated students enrolled at the University of St. Gallen. Assessment-year students are welcome as team members but cannot claim Campus Credits.</p></details>
           <details><summary>How much time is it?</summary><p>Typically 4 to 10 hours per week depending on role and project, with flexibility around exam periods.</p></details>
           <details><summary>Is it paid?</summary><p>All positions are voluntary. Every role can qualify for Campus Credits, and every member gets a work certificate.</p></details>
-          <details><summary>When can I apply?</summary><p>Anytime. We do not run application rounds. If a role is listed as open, apply through the link above with a short form and your CV. We invite you to a 30-minute conversation with the team lead and the Project Head, and you hear back within two weeks.</p></details>
+          <details><summary>When can I apply?</summary><p>Whenever a role is listed as open. If a deadline is shown above, send your application before it. Apply through the link above with a short form and your CV. We invite you to a 30-minute conversation with the team lead and the Project Head, and you hear back within two weeks.</p></details>
           <details><summary>The role I want is not listed. Can I still apply?</summary><p>Yes. Write to {settings.projectHeadEmail} with a few lines about what you would like to do, and we will get in touch when a matching role opens.</p></details>
         </div>
         <div class="mailbox">
