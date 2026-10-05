@@ -92,8 +92,8 @@ const perks = [
       {openRoles > 0 && deadline.active ? (
         <>
           <div class="banner dl-only" data-deadline={deadline.iso}>
-            <div class="count">{deadline.daysLeft}<small>{deadline.daysLeft === 1 ? 'day left' : 'days left'}</small></div>
-            <div><b>Applications are open until {deadline.long}.</b>{openRoles} open {openRoles === 1 ? 'role' : 'roles'}. We review applications as they come in and get back to you within two weeks.</div>
+            <div class="count">{openRoles}<small>{openRoles === 1 ? 'open role' : 'open roles'}</small></div>
+            <div><b>Applications are open until {deadline.long}.</b>We review applications as they come in and get back to you within two weeks.</div>
             {settings.applicationUrl && <a class="btn btn-ink ext" href={settings.applicationUrl} target="_blank" rel="noopener">Apply now</a>}
           </div>
           <div class="banner dl-fallback" hidden>

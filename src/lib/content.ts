@@ -84,10 +84,8 @@ export async function getAbout() {
 /** An optional application deadline. Active while the date is today or later. */
 export function deadlineInfo(iso: string | null | undefined) {
   if (!iso) return { active: false as const };
-  const d = parseDate(iso);
-  const daysLeft = Math.round((d.getTime() - today().getTime()) / 864e5);
-  if (daysLeft < 0) return { active: false as const };
-  return { active: true as const, iso, daysLeft, ...formatDate(iso) };
+  if (parseDate(iso) < today()) return { active: false as const };
+  return { active: true as const, iso, ...formatDate(iso) };
 }
 
 export function initials(name: string): string {

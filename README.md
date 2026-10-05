@@ -36,7 +36,7 @@ Everything editable lives in the admin. Nothing else needs touching for day-to-d
 | **About page** | Headline, story (blank line between paragraphs, `**bold**` allowed), vision, group photo. |
 | **Site settings** | Emails, contact form URL, application page URL, social links, address, analytics token. |
 
-Applications are open whenever a role is marked *Open*; with no open role, the About page invites spontaneous applications. An optional **application deadline** in *Site settings* adds "apply by …" to the homepage strip and a countdown to the About banner while the date lies in the future; afterwards the site returns to "applications welcome anytime" on its own. Clear the field when there is no deadline.
+Applications are open whenever a role is marked *Open*; with no open role, the About page invites spontaneous applications. An optional **application deadline** in *Site settings* adds "apply by …" to the homepage strip and "open until …" to the About banner while the date lies in the future; afterwards the site returns to "applications welcome anytime" on its own. Clear the field when there is no deadline.
 
 ### Rules of thumb
 
