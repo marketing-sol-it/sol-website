@@ -1,5 +1,5 @@
 ---
-import { formatDate, FORMAT_LABEL, type Event } from '../lib/content';
+import { formatDate, FORMAT_LABEL, asset, type Event } from '../lib/content';
 
 interface Props {
   event: Event;
@@ -11,7 +11,7 @@ const time = [event.startTime, event.endTime].filter(Boolean).join('–');
 ---
 <article class:list={['ev', { past }]} data-date={event.date}>
   <div class:list={['cover', event.format]}>
-    {event.cover && <img src={event.cover} alt="" loading="lazy" />}
+    {event.cover && <img src={asset(event.cover)} alt="" loading="lazy" />}
     <span class="tag">{FORMAT_LABEL[event.format] ?? event.format}</span>
   </div>
   <div class="body">
@@ -31,7 +31,7 @@ const time = [event.startTime, event.endTime].filter(Boolean).join('–');
       {past && event.recap && (
         <div class="recap"><b>Recap</b>{event.recap}
           {event.photos && event.photos.length > 0 && (
-            <div class="photos">{event.photos.map((p) => p && <img src={p} alt="" loading="lazy" />)}</div>
+            <div class="photos">{event.photos.map((p) => p && <img src={asset(p)} alt="" loading="lazy" />)}</div>
           )}
         </div>
       )}

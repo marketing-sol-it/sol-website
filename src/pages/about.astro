@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { getAbout, getTeam, getPositions, getSettings, initials, paragraphs, deadlineInfo } from '../lib/content';
+import { getAbout, getTeam, getPositions, getSettings, initials, paragraphs, deadlineInfo, asset } from '../lib/content';
 
 const about = await getAbout();
 const settings = await getSettings();
@@ -41,7 +41,7 @@ const perks = [
     <div class="wrap">
       <div class="about-intro reveal">
         <figure>
-          <img src={about.groupPhoto ?? '/images/site/stairs.jpg'} alt={about.groupPhotoCaption ?? 'The oikos Solar team'} width="1600" height="1200" />
+          <img src={asset(about.groupPhoto) ?? '/images/site/stairs.jpg'} alt={about.groupPhotoCaption ?? 'The oikos Solar team'} width="1600" height="1200" />
           {about.groupPhotoCaption && <figcaption>{about.groupPhotoCaption}</figcaption>}
         </figure>
         <div class="story">
@@ -75,7 +75,7 @@ const perks = [
         <div class="team reveal">
           {leadership.map((m) => (
             <div class="member">
-              <div class="ph">{m.photo ? <img src={m.photo} alt={m.name} loading="lazy" /> : initials(m.name)}</div>
+              <div class="ph">{m.photo ? <img src={asset(m.photo)} alt={m.name} loading="lazy" /> : initials(m.name)}</div>
               <b>{m.name}</b>
               <span>{m.role}</span>
               {m.linkedin && <a class="ext" href={m.linkedin} rel="noopener">LinkedIn</a>}

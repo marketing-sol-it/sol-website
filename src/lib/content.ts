@@ -1,4 +1,7 @@
 import { createReader } from '@keystatic/core/reader';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import keystaticConfig from '../../keystatic.config';
 
 // One reader for the whole build. Pages are prerendered, so every read
@@ -86,6 +89,27 @@ export function deadlineInfo(iso: string | null | undefined) {
   if (!iso) return { active: false as const };
   if (parseDate(iso) < today()) return { active: false as const };
   return { active: true as const, iso, ...formatDate(iso) };
+}
+
+/**
+ * Cache-busting for images uploaded through the admin. Keystatic keeps the
+ * same file name on every upload (photo.jpeg, logo.png), so browsers would
+ * keep showing the old file. Appending a short content hash gives every
+ * changed image a new URL. Falls back to the plain path if the file is missing.
+ */
+const assetCache = new Map<string, string>();
+export function asset(path: string | null | undefined): string | undefined {
+  if (!path) return undefined;
+  if (!path.startsWith('/')) return path;
+  const hit = assetCache.get(path);
+  if (hit) return hit;
+  let out = path;
+  try {
+    const buf = readFileSync(join(process.cwd(), 'public', path));
+    out = `${path}?v=${createHash('md5').update(buf).digest('hex').slice(0, 8)}`;
+  } catch {}
+  assetCache.set(path, out);
+  return out;
 }
 
 export function initials(name: string): string {

@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PageHero from '../components/PageHero.astro';
-import { getSettings, getPartners, mailto } from '../lib/content';
+import { getSettings, getPartners, mailto, asset } from '../lib/content';
 
 const settings = await getSettings();
 const email = settings.consultingEmail;
@@ -81,7 +81,7 @@ const refs = [
           return (
             <div class="refcard">
               <div class="top">
-                {logo ? <img src={logo} alt={r.name} loading="lazy" /> : <h3>{r.name}</h3>}
+                {logo ? <img src={asset(logo)} alt={r.name} loading="lazy" /> : <h3>{r.name}</h3>}
                 <span class="pill">{r.kind}</span>
               </div>
               <h3 class="refname">{r.name}</h3>
