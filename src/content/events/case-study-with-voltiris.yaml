@@ -6,5 +6,7 @@ language: EN
 description: Explore an innovative solar startup
 partner: Voltiris
 cover: /images/events/case-study-with-voltiris/cover.png
+signupUrl: >-
+  https://docs.google.com/forms/d/e/1FAIpQLSd0jYV3pVcGIHGUiF1RjZp0pzALf1LMzMopAzZxXmd0D44ZIQ/viewform
 hidden: false
 photos: []
