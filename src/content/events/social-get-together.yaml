@@ -5,5 +5,5 @@ endTime: '20:00'
 location: OYA Bar
 format: community
 language: EN
-hidden: false
+hidden: true
 photos: []
